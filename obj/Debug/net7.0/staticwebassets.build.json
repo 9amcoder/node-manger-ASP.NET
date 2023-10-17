@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "lNo3XrWPKuK5n8FefQB39D3WZXP0bw3iXIJ2WA2tDCM=",
+  "Source": "NodeManagementApp",
+  "BasePath": "_content/NodeManagementApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -1,0 +1,34 @@
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Files built by Visual Studio
+*_i.c
+*.dll
+*.exe
+*.pdb
+*.dll.config
+*.cache
+*.suo
+*.user
+*_i.h
+*.idb
+*.svclog
+*.scc
+
+# Microsoft Visual Studio user options file
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Common Intermediate Language temporary files
+il-*
+
+# Microsoft Distributed Component Object Model temporary files
+*.ncb
+*.tlb
+*.tlh
+*.bak
+*.bak.*
