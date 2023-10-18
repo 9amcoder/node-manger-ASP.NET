@@ -91,7 +91,8 @@ dotnet test
 ### Build with
 
 * .NET 7
-* xUnit
+* ASP.NET WEB API
+* MongoDB
 
 ### Author
 
