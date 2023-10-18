@@ -2,15 +2,15 @@ namespace NodeManagementApp.Models
 {
     public interface INode
     {
-        string NodeId { get; }
-        string City { get; }
-        DateTime OnlineTime { get; }
-        bool IsOnline { get; }
-        float UploadUtilization { get; }
-        float DownloadUtilization { get; }
-        float ErrorRate { get; }
-        uint ConnectedClients { get; }
-        void SetOnline();
-        void SetOffline();
+        string NodeId { get; set; }
+        string City { get; set; }
+        DateTime OnlineTime { get; set; }
+        bool IsOnline { get; set; }
+        float UploadUtilization { get; set; }
+        float DownloadUtilization { get; set; }
+        float ErrorRate { get; set; }
+        uint ConnectedClients { get; set; }
+        Thresholds Thresholds { get; set; }
+        List<IAlarm> Alarms { get; set; }
     }
 }

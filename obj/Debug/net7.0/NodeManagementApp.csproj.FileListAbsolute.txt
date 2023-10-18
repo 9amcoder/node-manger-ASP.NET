@@ -44,3 +44,4 @@
 /Users/sultanforwork/Downloads/TekkSavy/NodeManager-Steve-Sultan/NodeManagementApp/obj/Debug/net7.0/NodeManagementApp.pdb
 /Users/sultanforwork/Downloads/TekkSavy/NodeManager-Steve-Sultan/NodeManagementApp/obj/Debug/net7.0/NodeManagementApp.genruntimeconfig.cache
 /Users/sultanforwork/Downloads/TekkSavy/NodeManager-Steve-Sultan/NodeManagementApp/obj/Debug/net7.0/ref/NodeManagementApp.dll
+/Users/sultanforwork/Downloads/TekkSavy/NodeManager-Steve-Sultan/NodeManagementApp/bin/Debug/net7.0/Serilog.dll
