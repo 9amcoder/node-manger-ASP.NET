@@ -78,11 +78,11 @@ Follow the steps to run this project in your local machine.
 
 1. Clone the repository.
 
-git clone https://github.com/username/NodeManagerAPI.git
+```git clone https://github.com/username/NodeManagerAPI.git```
 
-2. Navigate to the project directory.
-dotnet build
-dotnet run
+2. Navigate to the project directory.<br/>
+```dotnet build```<br/>
+```dotnet run```
 
 ### Running the tests
 
