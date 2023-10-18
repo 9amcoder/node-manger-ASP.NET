@@ -38,8 +38,6 @@ What things you need to install the software.
 |   |-- Classes/
 |   |   |-- Node.cs
 |   |   |-- NodeManager.cs
-|-- Helpers/
-|-- Startup.cs
 |-- Program.cs
 |-- README.md
 |-- .gitignore
@@ -49,27 +47,23 @@ What things you need to install the software.
 
 ### Description of the files:
 
-* Controllers/NodesController.cs: In the MVC model, this is where define endpoints for the node operations.
+* `Controllers/NodesController.cs`: In the MVC model, this is where define endpoints for the node operations.
 
-* Services/Interfaces/INodeService.cs: A service interface that defines the contract for the Service layer.
+* `Services/Interfaces/INodeService.cs`: A service interface that defines the contract for the Service layer.
 
-* Services/NodeService.cs: The concrete implementation of INodeService interface, using INodeManager to manipulate Node entities.
+* `Services/NodeService.cs`: The concrete implementation of INodeService interface, using INodeManager to manipulate Node entities.
 
-* Models/Interfaces/INode.cs, Models/Interfaces/INodeManager.cs: The provided interfaces.
+* `Models/Interfaces/INode.cs`, Models/Interfaces/INodeManager.cs: The provided interfaces.
 
-* Models/Classes/Node.cs, Models/Classes/NodeManager.cs: The provided concrete implementation of those interfaces.
+* `Models/Classes/Node.cs`, `Models/Classes/NodeManager.cs`: The provided concrete implementation of those interfaces.
 
-* Helpers/: Store utility classes and methods, such as custom exception handlers, here.
+* `Program.cs`: The entry point into the .NET Core application.
 
-* Startup.cs: The default file created by .NET Core for setup and initial configurations.
+* `README.md`: Documentation on how to setup and run the project.
 
-* Program.cs: The entry point into the .NET Core application.
+* `.gitignore`: To tell Git what files and folders not to track or handle.
 
-* README.md: Documentation on how to setup and run the project.
-
-* .gitignore: To tell Git what files and folders not to track or handle.
-
-* appsettings.json: .NET configuration file.
+* `appsettings.json`: .NET configuration file.
 
 
 ### Installing
