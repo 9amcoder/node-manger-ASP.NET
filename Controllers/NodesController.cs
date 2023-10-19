@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using NodeManagementApp.Models.Classes;
 using NodeManagementApp.Services;
-using NodeManagementApp.Models;
-using Serilog;
+
+namespace NodeManagementApp.Controllers;
 
 [ApiController]
 [Route("api/nodes")]
@@ -15,9 +16,10 @@ public class NodesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> List()
     {
         var nodes = await _service.ReadAsync();
+        
         return Ok(nodes);
     }
 
@@ -25,30 +27,30 @@ public class NodesController : ControllerBase
     public async Task<IActionResult> Get(string id)
     {
         var node = await _service.FindAsync(id);
+        
         if (node == null)
         {
             return NotFound();
         }
+        
         return Ok(node);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Node node)
+    public async Task<IActionResult> Create(Node node) // create a Node object in the front end then just deposit it
     {
         if (!ModelState.IsValid || string.IsNullOrEmpty(node.NodeId))
         {
-            Log.Error("Invalid Node object");
             return BadRequest();
         }
 
         await _service.CreateAsync(node);
-        Log.Information("Created Node with id: {NodeId}", node.NodeId);
         
         return CreatedAtRoute("GetNode", new { id = node.NodeId }, node);
     }
 
     [HttpPut("{id}", Name = "UpdateNode")]
-    public async Task<IActionResult> Update(string id, [FromBody] Node node)
+    public async Task<IActionResult> Update(string id, Node node)
     {
         if (!ModelState.IsValid)
         {
@@ -65,7 +67,33 @@ public class NodesController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{nodeId}", Name = "OnlineNode")]
+    public async Task<IActionResult> Online(string nodeId, bool online = true)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
 
+        var node = await _service.FindAsync(nodeId);
+        if (node == null)
+        {
+            return BadRequest($"{nodeId} does NOT exists.");
+        }
+
+        if (online)
+        {
+            node.SetOnline();
+        }
+        else
+        {
+            node.SetOffline();
+        }
+        
+        await _service.UpdateAsync(nodeId, node);
+        return NoContent();
+    }
+    
     private bool IsValid(Node node)
     {
         //TODO: Add validation logic here.
@@ -76,13 +104,22 @@ public class NodesController : ControllerBase
     public async Task<IActionResult> Delete(string id)
     {
         var node = await _service.FindAsync(id);
+        
         if (node == null)
         {
             return NotFound();
         }
 
         await _service.DeleteAsync(id);
-        return NoContent();
+        
+        // if id is still in the db, that means failed
+        var exists = await _service.FindAsync(id);
+        if (exists == null)
+        {
+            return NoContent();
+        }
+
+        return BadRequest($"{id} could NOT be deleted");
     }
 
     [HttpGet("{id}/telemetry", Name = "GetNodeTelemetry")]
@@ -98,22 +135,25 @@ public class NodesController : ControllerBase
 
 
     [HttpPut("{id}/thresholds", Name = "UpdateNodeThresholds")]
-    public async Task<IActionResult> UpdateThresholds(string id, [FromBody] Thresholds thresholds)
+    public async Task<IActionResult> UpdateThresholds(string id, Thresholds thresholds)
     {
-        var existingNode = await _service.FindAsync(id);
-        if (existingNode == null)
+        var node = await _service.FindAsync(id);
+        
+        if (node == null)
         {
             return NotFound();
         }
+        
+        var updated = await _service.UpdateThresholdsAsync(id, thresholds);
 
-        await _service.UpdateThresholdsAsync(id, thresholds);
-        return NoContent();
+        return updated ? NoContent() : BadRequest($"Node id {id} thresholds can NOT be updated.");
     }
 
     [HttpGet("alarms", Name = "GetAlarms")]
-    public async Task<IActionResult> GetAlarms()
+    public async Task<IActionResult> ListAlarms()
     {
         var alarms = await _service.GetAlarmsAsync();
+        
         return Ok(alarms);
     }
 }

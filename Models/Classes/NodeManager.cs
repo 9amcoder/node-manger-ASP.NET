@@ -1,47 +1,45 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NodeManagementApp.Models.Interfaces;
 
-namespace NodeManagementApp.Models
+namespace NodeManagementApp.Models.Classes;
+
+// Used Node directly, as data is constructed on the front-end
+public class NodeManager : INodeManager
 {
-    public class NodeManager : INodeManager
+    private readonly List<INode> _nodes;
+
+    public NodeManager()
     {
-        private readonly List<INode> _nodes;
+        _nodes = new List<INode>();
+    }
 
-        public NodeManager()
+    public void AddNode(INode node)
+    {
+        if (_nodes.Any(n => n.NodeId == node.NodeId))
         {
-            _nodes = new List<INode>();
+            throw new Exception($"Node with id {node.NodeId} already exists");
         }
 
-        public void AddNode(INode node)
-        {
-            if (_nodes.Any(n => n.NodeId == node.NodeId))
-            {
-                throw new Exception($"Node with id {node.NodeId} already exists");
-            }
+        _nodes.Add(node);
+    }
 
-            _nodes.Add(node);
+    public void RemoveNode(string nodeId)
+    {
+        var node = GetNode(nodeId);
+        if (node == null)
+        {
+            throw new Exception($"No node with id {nodeId} found");
         }
 
-        public void RemoveNode(string nodeId)
-        {
-            var node = GetNode(nodeId);
-            if (node == null)
-            {
-                throw new Exception($"No node with id {nodeId} found");
-            }
+        _nodes.Remove(node);
+    }
 
-            _nodes.Remove(node);
-        }
+    public INode? GetNode(string nodeId)
+    {
+        return _nodes.FirstOrDefault(n => n.NodeId == nodeId);
+    }
 
-        public INode? GetNode(string nodeId)
-        {
-            return _nodes.FirstOrDefault(n => n.NodeId == nodeId);
-        }
-
-        public ICollection<INode> GetNodes()
-        {
-            return _nodes;
-        }
+    public ICollection<INode> GetNodes()
+    {
+        return _nodes;
     }
 }

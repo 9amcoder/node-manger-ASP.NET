@@ -1,10 +1,9 @@
-namespace NodeManagementApp.Models
+namespace NodeManagementApp.Models.Interfaces;
+
+public interface ITelemetry
 {
-    public interface ITelemetry
-    {
-        float UploadUtilization { get; set; }
-        float DownloadUtilization { get; set; }
-        float ErrorRate { get; set; }
-        uint ConnectedClients { get; set; }
-    }
-}    
+    float UploadUtilization { get; set; }
+    float DownloadUtilization { get; set; }
+    float ErrorRate { get; set; }
+    uint ConnectedClients { get; set; }
+}

@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using NodeManagementApp.Models;
+using NodeManagementApp.Models.Classes;
 
-namespace NodeManagementApp.Services
+namespace NodeManagementApp.Services.Interfaces
 {
     public interface INodeService
     {

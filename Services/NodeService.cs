@@ -5,6 +5,9 @@ using NodeManagementApp.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using System.Threading.Tasks;
+using NodeManagementApp.Models.Classes;
+using NodeManagementApp.Models.Interfaces;
+using NodeManagementApp.Services.Interfaces;
 
 namespace NodeManagementApp.Services
 {
@@ -22,16 +25,15 @@ namespace NodeManagementApp.Services
             _nodes = database.GetCollection<Node>(settings.Value.CollectionName);
         }
 
-        public async Task<Node> CreateAsync(Node node)
+        public async Task CreateAsync(Node node)
         {
             await _nodes.InsertOneAsync(node);
-            return node;
         }
 
-        public async Task<IList<Node>> ReadAsync() => 
+        public async Task<List<Node>?> ReadAsync() => 
             await _nodes.AsQueryable().ToListAsync();
 
-        public async Task<Node> FindAsync(string nodeId) => 
+        public async Task<Node?> FindAsync(string nodeId) => 
             await _nodes.Find(node => node.NodeId == nodeId).SingleOrDefaultAsync();
 
         public async Task UpdateAsync(string nodeId, Node node) =>
@@ -40,22 +42,31 @@ namespace NodeManagementApp.Services
         public async Task DeleteAsync(string nodeId) => 
             await _nodes.DeleteOneAsync(node => node.NodeId == nodeId);
 
-        public async Task<ITelemetry> GetTelemetryAsync(string nodeId)
+        public async Task<ITelemetry?> GetTelemetryAsync(string nodeId)
         {
             var node = await _nodes.Find(n => n.NodeId == nodeId).SingleOrDefaultAsync();
-            return node.Telemetry;
+            return node?.Telemetry;
         }
 
-        public async Task UpdateThresholdsAsync(string nodeId, IThresholds thresholds)
+        public async Task<bool> UpdateThresholdsAsync(string nodeId, IThresholds thresholds)
         {
             var node = await _nodes.Find(n => n.NodeId == nodeId).SingleOrDefaultAsync();
+            if (node == null)
+            {
+                return false;
+            }
             node.Thresholds = (Thresholds)thresholds;
             await _nodes.ReplaceOneAsync(n => n.NodeId == nodeId, node);
+            return true;
         }
 
-        public async Task<IEnumerable<IAlarm>> GetAlarmsAsync()
+        public async Task<IEnumerable<IAlarm>?> GetAlarmsAsync()
         {
             var nodes = await _nodes.AsQueryable().ToListAsync();
+            if (nodes == null)
+            {
+                return null;
+            }
             var alarms = nodes.SelectMany(n => n.Alarms);
             return alarms;
         }

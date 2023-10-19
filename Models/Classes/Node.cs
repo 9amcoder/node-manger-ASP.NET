@@ -1,11 +1,10 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Linq;
+using NodeManagementApp.Models.Interfaces;
 
-namespace NodeManagementApp.Models
-{
-    public class Node : INode
+namespace NodeManagementApp.Models.Classes;
+
+public class Node : INode
     {
         [BsonId]
         [BsonRepresentation(BsonType.String)]
@@ -102,5 +101,4 @@ namespace NodeManagementApp.Models
             ErrorRate = (float)rnd.NextDouble();
         }
     }
-}
 

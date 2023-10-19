@@ -1,17 +1,10 @@
-namespace NodeManagementApp.Models
+using NodeManagementApp.Models.Interfaces;
+
+namespace NodeManagementApp.Models.Classes;
+
+public class Alarm : IAlarm
 {
-    public class Alarm : IAlarm
-    {
-        public string NodeId { get; set; }
-        public string Metric { get; set; }
-        public float Value { get; set; }
-
-        public Alarm()
-        {
-            NodeId = Guid.NewGuid().ToString();
-            Metric = "Default Metric";
-            Value = 0;
-        }
-
-    }
+    public string NodeId { get; set; }
+    public string Metric { get; set; }
+    public float Value { get; set; }
 }
