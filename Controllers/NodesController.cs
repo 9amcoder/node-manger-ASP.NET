@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NodeManagementApp.Models.Classes;
 using NodeManagementApp.Services;
+using NodeManagementApp.Models.Interfaces;
 
 namespace NodeManagementApp.Controllers;
 
@@ -37,16 +38,39 @@ public class NodesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Node node) // create a Node object in the front end then just deposit it
+    public async Task<IActionResult> Create(Node node)
     {
-        if (!ModelState.IsValid || string.IsNullOrEmpty(node.NodeId))
+        if (!IsValidNode(node))
         {
             return BadRequest();
         }
 
         await _service.CreateAsync(node);
+
+        // Generate alarms based on the thresholds and current values
+        GenerateAlarms(node);
         
         return CreatedAtRoute("GetNode", new { id = node.NodeId }, node);
+    }
+
+    private void GenerateAlarms(Node node)
+    {
+        if (node.UploadUtilization > node.Thresholds.MaxUploadUtilization)
+        {
+            node.Alarms.Add(new Alarm { NodeId = node.NodeId, Metric = "UploadUtilization", Value = node.UploadUtilization });
+        }
+        if (node.DownloadUtilization > node.Thresholds.MaxDownloadUtilization)
+        {
+            node.Alarms.Add(new Alarm { NodeId = node.NodeId, Metric = "DownloadUtilization", Value = node.DownloadUtilization });
+        }
+        if (node.ErrorRate > node.Thresholds.MaxErrorRate)
+        {
+            node.Alarms.Add(new Alarm { NodeId = node.NodeId, Metric = "ErrorRate", Value = node.ErrorRate });
+        }
+        if (node.ConnectedClients > node.Thresholds.MaxConnectedClients)
+        {
+            node.Alarms.Add(new Alarm { NodeId = node.NodeId, Metric = "ConnectedClients", Value = node.ConnectedClients });
+        }
     }
 
     [HttpPut("{id}", Name = "UpdateNode")]
@@ -67,10 +91,10 @@ public class NodesController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("{nodeId}", Name = "OnlineNode")]
-    public async Task<IActionResult> Online(string nodeId, bool online = true)
+    [HttpPut("{nodeId}/setOnline", Name = "OnlineNode")]
+    public async Task<IActionResult> Online(string nodeId, Node onlineNode)
     {
-        if (!ModelState.IsValid)
+        if (!IsValidNode(onlineNode))
         {
             return BadRequest();
         }
@@ -78,26 +102,13 @@ public class NodesController : ControllerBase
         var node = await _service.FindAsync(nodeId);
         if (node == null)
         {
-            return BadRequest($"{nodeId} does NOT exists.");
+            return NotFound();
         }
 
-        if (online)
-        {
-            node.SetOnline();
-        }
-        else
-        {
-            node.SetOffline();
-        }
-        
+        node.IsOnline = onlineNode.IsOnline;
+
         await _service.UpdateAsync(nodeId, node);
         return NoContent();
-    }
-    
-    private bool IsValid(Node node)
-    {
-        //TODO: Add validation logic here.
-        return ModelState.IsValid;
     }
 
     [HttpDelete("{id}", Name = "DeleteNode")]
@@ -120,6 +131,11 @@ public class NodesController : ControllerBase
         }
 
         return BadRequest($"{id} could NOT be deleted");
+    }
+
+    private bool IsValidNode(Node node)
+    {
+        return ModelState.IsValid && !string.IsNullOrEmpty(node.NodeId);
     }
 
     [HttpGet("{id}/telemetry", Name = "GetNodeTelemetry")]

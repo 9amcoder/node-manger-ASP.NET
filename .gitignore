@@ -2,6 +2,10 @@
 project.lock.json
 project.fragment.lock.json
 artifacts/
+bin/
+obj/
+logs/
+
 
 # Files built by Visual Studio
 *_i.c
