@@ -78,9 +78,16 @@ Follow the steps to run this project in your local machine.
 ```dotnet build```<br/>
 ```dotnet run```
 
-### Running the tests
+### Connect with MongoDB
 
-dotnet test
+Replace the connection string in appsettings.json with your own connection string.
+```
+ "MongoDbSettings": {
+    "ConnectionString": "Replace with MongoDb Connection String",
+    "DatabaseName": "Replace with Database Name",
+    "CollectionName": "Replace with Collection Name"
+  }
+```
 
 ### Build with
 
