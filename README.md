@@ -80,7 +80,7 @@ Follow the steps to run this project in your local machine.
 
 ### Connect with MongoDB
 
-Replace the connection string in appsettings.json with your own connection string.
+Replace the connection string in `appsettings.json` and `appsettings.Development.json` with your own connection string.
 ```
  "MongoDbSettings": {
     "ConnectionString": "Replace with MongoDb Connection String",
